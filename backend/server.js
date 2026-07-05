@@ -20,7 +20,13 @@ app.use(
   })
 );
 app.use(express.json({ limit: "2mb" }));
-
+app.get("/", (_req, res) => {
+  res.json({
+    message: "Welcome to Annapurna API 🍽️",
+    status: "running",
+    docs: "/api/health"
+  });
+});
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", service: "annapurna-api" });
 });
