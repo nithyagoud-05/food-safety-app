@@ -1,5 +1,6 @@
 import { authenticateUser, createUser } from "../data/store.js";
 import { signToken } from "../utils/token.js";
+import { sendError } from "../utils/errors.js";
 
 function listFromText(value) {
   if (Array.isArray(value)) return value.filter(Boolean);
@@ -24,18 +25,22 @@ export async function register(req, res) {
     });
     res.status(201).json({ user, token: signToken(user) });
   } catch (error) {
-    res.status(400).json({ message: error.message || "Unable to register" });
+    sendError(res, error);
   }
 }
 
 export async function login(req, res) {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ message: "Email and password are required" });
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
+    const user = await authenticateUser(email, password);
+    if (!user) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+    res.json({ user, token: signToken(user) });
+  } catch (error) {
+    sendError(res, error);
   }
-  const user = await authenticateUser(email, password);
-  if (!user) {
-    return res.status(401).json({ message: "Invalid email or password" });
-  }
-  res.json({ user, token: signToken(user) });
 }

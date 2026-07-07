@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import { connectDatabase } from "./src/config/db.js";
+import { seedDemoRestaurants } from "./src/seed/demoRestaurants.js";
 import authRoutes from "./src/routes/authRoutes.js";
 import restaurantRoutes from "./src/routes/restaurantRoutes.js";
 import reviewRoutes from "./src/routes/reviewRoutes.js";
@@ -41,7 +42,13 @@ app.use((_req, res) => {
   res.status(404).json({ message: "Endpoint not found" });
 });
 
+app.use((error, _req, res, _next) => {
+  console.error(error);
+  res.status(500).json({ message: "Internal server error" });
+});
+
 await connectDatabase();
+await seedDemoRestaurants();
 
 app.listen(port, () => {
   console.log(`Annapurna API running on http://localhost:${port}`);

@@ -1,4 +1,5 @@
 import { updateUserProfile } from "../data/store.js";
+import { sendError } from "../utils/errors.js";
 
 function listFromText(value) {
   if (Array.isArray(value)) return value.filter(Boolean);
@@ -13,9 +14,13 @@ export async function getProfile(req, res) {
 }
 
 export async function updateProfile(req, res) {
-  const user = await updateUserProfile(req.user.id, {
-    allergies: listFromText(req.body.allergies),
-    preferences: listFromText(req.body.preferences)
-  });
-  res.json(user);
+  try {
+    const user = await updateUserProfile(req.user.id, {
+      allergies: listFromText(req.body.allergies),
+      preferences: listFromText(req.body.preferences)
+    });
+    res.json(user);
+  } catch (error) {
+    sendError(res, error);
+  }
 }

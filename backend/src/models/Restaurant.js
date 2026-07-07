@@ -1,18 +1,35 @@
 import mongoose from "mongoose";
 
+const menuItemSchema = new mongoose.Schema(
+  {
+    dishName: { type: String, required: true, trim: true },
+    description: { type: String, default: "", trim: true },
+    ingredients: [{ type: String, trim: true }],
+    allergens: [{ type: String, trim: true }]
+  },
+  { _id: true }
+);
+
 const restaurantSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
     image: { type: String, required: true },
-    location: { type: String, required: true },
-    area: { type: String, required: true },
-    cuisine: { type: String, required: true },
-    rating: { type: Number, default: 0 },
-    safetyScore: { type: Number, default: 75 },
-    complaintResolution: { type: Number, default: 80 },
-    ingredientTransparency: { type: Number, default: 80 }
+    address: { type: String, required: true, trim: true },
+    city: { type: String, required: true, trim: true, index: true },
+    cuisine: { type: String, required: true, trim: true, index: true },
+    description: { type: String, required: true, trim: true },
+    ingredients: [{ type: String, trim: true }],
+    allergens: [{ type: String, trim: true }],
+    safetyScore: { type: Number, min: 0, max: 100, default: 75 },
+    averageRating: { type: Number, min: 0, max: 5, default: 0 },
+    totalReviews: { type: Number, min: 0, default: 0 },
+    latitude: { type: Number, min: -90, max: 90 },
+    longitude: { type: Number, min: -180, max: 180 },
+    menuItems: [menuItemSchema]
   },
   { timestamps: true }
 );
+
+restaurantSchema.index({ name: "text", cuisine: "text", city: "text", address: "text" });
 
 export default mongoose.model("Restaurant", restaurantSchema);
