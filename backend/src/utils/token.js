@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 const secret = process.env.JWT_SECRET || "annapurna-local-secret";
 
 export function signToken(user) {
-  return jwt.sign({ id: user.id, email: user.email }, secret, { expiresIn: "7d" });
+  return jwt.sign({ id: user.id, role: user.role }, secret, { expiresIn: "7d" });
 }
 
 export function verifyToken(token) {

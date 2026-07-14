@@ -1,3 +1,5 @@
+import { USER_ROLES, USER_STATUSES } from "../constants/auth.js";
+
 function asId(value) {
   return value?._id?.toString?.() || value?.id?.toString?.() || value?.toString?.();
 }
@@ -15,6 +17,8 @@ export function serializeUser(user) {
   return {
     ...rest,
     id: asId(_id || user.id),
+    role: rest.role || USER_ROLES.USER,
+    status: rest.status || USER_STATUSES.ACTIVE,
     savedRestaurants: (rest.savedRestaurants || []).map(asId)
   };
 }
@@ -66,14 +70,14 @@ export function serializeReview(review) {
   };
 }
 
-export function serializeReport(report) {
+export function serializeReport(report, options = {}) {
   const restaurant = report.restaurant;
   const user = report.user;
+  const includeUser = options.includeUser ?? true;
 
-  return {
+  const value = {
     id: asId(report._id || report.id),
     restaurantId: asId(restaurant?._id || restaurant || report.restaurantId),
-    userId: asId(user?._id || user || report.userId),
     category: report.type || report.category,
     type: report.type || report.category,
     severity: report.severity,
@@ -81,4 +85,11 @@ export function serializeReport(report) {
     status: report.status,
     createdAt: report.createdAt
   };
+
+  if (includeUser) {
+    value.userId = asId(user?._id || user || report.userId);
+    value.userName = user?.name;
+  }
+
+  return value;
 }

@@ -3,10 +3,10 @@ import { LogOut, ShieldCheck, UserRound } from "lucide-react";
 import { useAuth } from "../hooks/useAuth.jsx";
 
 const navItems = [
-  ["Dashboard", "/dashboard"],
-  ["Restaurants", "/restaurants"],
-  ["Report", "/report"],
-  ["Admin", "/admin"]
+  { label: "Dashboard", to: "/dashboard" },
+  { label: "Restaurants", to: "/restaurants" },
+  { label: "Report", to: "/report" },
+  { label: "Admin", to: "/admin", roles: ["admin"] }
 ];
 
 export default function Layout() {
@@ -27,7 +27,9 @@ export default function Layout() {
             Annapurna
           </Link>
           <div className="flex flex-wrap items-center gap-1">
-            {navItems.map(([label, to]) => (
+            {navItems
+              .filter((item) => !item.roles || item.roles.includes(user?.role))
+              .map(({ label, to }) => (
               <NavLink
                 key={to}
                 to={to}

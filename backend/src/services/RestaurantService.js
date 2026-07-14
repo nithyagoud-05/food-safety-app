@@ -52,7 +52,7 @@ export async function getRestaurantById(id) {
     ...serializedRestaurant,
     dishes: menuItems.map((dish) => serializeDish({ ...dish, restaurantId: restaurant._id })),
     reviews: reviews.map(serializeReview),
-    safetyHistory: reports.map(serializeReport)
+    safetyHistory: reports.map((report) => serializeReport(report, { includeUser: false }))
   };
 }
 

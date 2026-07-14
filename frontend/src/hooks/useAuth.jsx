@@ -3,18 +3,28 @@ import { api } from "../services/api.js";
 
 const AuthContext = createContext(null);
 
+function normalizeUser(user) {
+  if (!user) return null;
+  return {
+    ...user,
+    role: user.role || "user",
+    status: user.status || "active"
+  };
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem("annapurna_user");
-    return saved ? JSON.parse(saved) : null;
+    return saved ? normalizeUser(JSON.parse(saved)) : null;
   });
 
   async function applySession(action, payload) {
     const result = await action(payload);
+    const sessionUser = normalizeUser(result.user);
     localStorage.setItem("annapurna_token", result.token);
-    localStorage.setItem("annapurna_user", JSON.stringify(result.user));
-    setUser(result.user);
-    return result.user;
+    localStorage.setItem("annapurna_user", JSON.stringify(sessionUser));
+    setUser(sessionUser);
+    return sessionUser;
   }
 
   const value = useMemo(
@@ -29,7 +39,7 @@ export function AuthProvider({ children }) {
         setUser(null);
       },
       refreshUser: async () => {
-        const profile = await api.profile();
+        const profile = normalizeUser(await api.profile());
         localStorage.setItem("annapurna_user", JSON.stringify(profile));
         setUser(profile);
         return profile;

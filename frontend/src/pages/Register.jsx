@@ -11,6 +11,7 @@ export default function Register() {
     name: "",
     email: "",
     password: "",
+    role: "user",
     allergies: "",
     preferences: ""
   });
@@ -43,6 +44,13 @@ export default function Register() {
           <label className="block space-y-2">
             <span className="label">Password</span>
             <input className="field" type="password" minLength="6" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required />
+          </label>
+          <label className="block space-y-2">
+            <span className="label">Account type</span>
+            <select className="field" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
+              <option value="user">Diner/User</option>
+              <option value="restaurant_owner">Restaurant Owner</option>
+            </select>
           </label>
           <label className="block space-y-2">
             <span className="label">Dietary preferences</span>

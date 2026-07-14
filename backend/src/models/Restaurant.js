@@ -25,7 +25,11 @@ const restaurantSchema = new mongoose.Schema(
     totalReviews: { type: Number, min: 0, default: 0 },
     latitude: { type: Number, min: -90, max: 90 },
     longitude: { type: Number, min: -180, max: 180 },
-    menuItems: [menuItemSchema]
+    menuItems: [menuItemSchema],
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null, index: true },
+    verified: { type: Boolean, default: false, index: true },
+    verifiedAt: { type: Date, default: null },
+    verifiedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null }
   },
   { timestamps: true }
 );

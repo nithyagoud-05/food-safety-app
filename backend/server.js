@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import { connectDatabase } from "./src/config/db.js";
+import { ensureDatabaseIndexes } from "./src/config/indexes.js";
 import { seedDemoRestaurants } from "./src/seed/demoRestaurants.js";
 import authRoutes from "./src/routes/authRoutes.js";
 import restaurantRoutes from "./src/routes/restaurantRoutes.js";
@@ -48,6 +49,7 @@ app.use((error, _req, res, _next) => {
 });
 
 await connectDatabase();
+await ensureDatabaseIndexes();
 await seedDemoRestaurants();
 
 app.listen(port, () => {

@@ -35,5 +35,5 @@ export async function listReports() {
     .populate("user", "name")
     .sort({ createdAt: -1 })
     .lean();
-  return reports.map(serializeReport);
+  return reports.map((report) => serializeReport(report, { includeUser: true }));
 }
