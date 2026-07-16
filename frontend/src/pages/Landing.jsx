@@ -21,7 +21,7 @@ export default function Landing() {
             Eat with confidence, not assumptions.
           </p>
           <p className="mt-5 max-w-2xl text-base leading-7 text-gray-100">
-            Search restaurants, inspect ingredients, catch allergen risks, read verified reviews, and report food
+            Search restaurants, inspect ingredients, catch allergen risks, read authenticated user reviews, and report food
             safety concerns from one trustworthy place.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">

@@ -30,6 +30,7 @@ export async function createUser(payload) {
     password,
     role,
     status,
+    ownerApprovalStatus: role === USER_ROLES.RESTAURANT_OWNER ? "pending" : undefined,
     allergies: payload.allergies || [],
     preferences: payload.preferences || []
   });

@@ -3,6 +3,7 @@ import Restaurant from "../models/Restaurant.js";
 import Review from "../models/Review.js";
 import { ApiError } from "../utils/errors.js";
 import { recalculateRestaurantRating } from "./RestaurantService.js";
+import { recalculateRestaurantSafetyScore } from "./SafetyScoreService.js";
 import { serializeReview } from "./serializers.js";
 
 function ensureObjectId(id) {
@@ -24,10 +25,10 @@ export async function upsertReview(user, payload) {
       user: user.id,
       restaurant: payload.restaurantId,
       rating: payload.rating,
-      title: payload.title || "Verified visit",
+      title: payload.title || "Authenticated user review",
       comment: payload.comment,
       visitDate: payload.visitDate || new Date(),
-      verified: true
+      verified: false
     },
     { upsert: true, new: true, runValidators: true, setDefaultsOnInsert: true }
   )
@@ -35,6 +36,7 @@ export async function upsertReview(user, payload) {
     .lean();
 
   await recalculateRestaurantRating(payload.restaurantId);
+  await recalculateRestaurantSafetyScore(payload.restaurantId);
   return serializeReview(review);
 }
 
@@ -44,4 +46,5 @@ export async function deleteReview(userId, restaurantId) {
 
   await Review.deleteOne({ user: userId, restaurant: restaurantId });
   await recalculateRestaurantRating(restaurantId);
+  await recalculateRestaurantSafetyScore(restaurantId);
 }

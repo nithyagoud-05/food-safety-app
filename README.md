@@ -1,129 +1,82 @@
-# 🍽️ Annapurna – Food Safety Intelligence Platform
+# Annapurna
 
-> **Eat with confidence, not assumptions.**
+Food Safety Intelligence Platform.
 
-Annapurna is a full-stack web application that empowers users to make informed dining decisions by providing restaurant transparency, ingredient awareness, verified reviews, and food safety reporting.
+Tagline: **Eat with confidence, not assumptions.**
 
-The platform is designed to bridge the gap between consumers and food safety by making critical restaurant information accessible in one place.
+Annapurna is a public-health-first restaurant transparency platform focused on ingredients, allergens, authenticated user reviews, consumer-reported food-safety concerns, and explainable Annapurna safety intelligence.
 
----
+Annapurna is not an official FSSAI system and does not claim government verification or live regulatory data integration.
 
-## ✨ Features
+## Current Features
 
-* 🔍 Search and browse restaurants
-* 🍽️ View detailed restaurant profiles
-* 🥗 Ingredient transparency for dishes
-* ⚠️ Allergy-aware ingredient warnings
-* ⭐ Verified review system
-* 📊 Restaurant Safety Score
-* 🚨 Food safety incident reporting
-* 👤 Secure user authentication with JWT
-* 🧑 User profile with dietary preferences
+- JWT authentication with diner, restaurant owner, and admin roles
+- Account statuses: active, pending, blocked
+- Restaurant owner approval and admin assignment workflow
+- Restaurant discovery and Hyderabad public-metadata profiles
+- Menu transparency with major declared ingredients, allergens, dietary markers, availability, and data source labels
+- Personalized allergy matching against ingredients and allergens
+- Authenticated user reviews with one review per diner per restaurant
+- Food-safety concern reporting into Annapurna moderation
+- Public-safe incident history on restaurant detail pages
+- Explainable Annapurna Safety Score with insufficient-data state for weak public signals
+- Regulatory-style admin dashboard for owner approval, restaurant management, report triage, and review moderation
+- Owner dashboard for assigned restaurant transparency and menu management
 
----
+## Stack
 
-## 🛠️ Tech Stack
+- Frontend: React, Vite, Tailwind CSS
+- Backend: Node.js, Express.js
+- Database: MongoDB Atlas with Mongoose
+- Authentication: JWT
 
-### Frontend
+MongoDB is required. There is no in-memory production fallback.
 
-* React
-* Vite
-* Tailwind CSS
-
-### Backend
-
-* Node.js
-* Express.js
-
-### Database
-
-* MongoDB
-* In-memory seeded data (for local demo)
-
-### Authentication
-
-* JSON Web Tokens (JWT)
-
----
-
-## 📁 Project Structure
-
-```text
-frontend/
-backend/
-README.md
-package.json
-```
-
----
-
-## 🚀 Getting Started
-
-### Install dependencies
+## Run Locally
 
 ```bash
 npm install
-```
-
-### Run the project
-
-```bash
 npm run dev
 ```
 
-Frontend:
+Frontend: `http://localhost:5173`
 
-```text
-http://localhost:5173
-```
+Backend: `http://localhost:5000`
 
-Backend:
+## Environment
 
-```text
-http://localhost:5000
-```
-
----
-
-## ⚙️ Environment Variables
-
-Create `backend/.env`
+Create `backend/.env`:
 
 ```env
 PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
+MONGO_URI=mongodb+srv://...
+JWT_SECRET=replace-this-secret
 CLIENT_ORIGIN=http://localhost:5173
 ```
 
-If `MONGO_URI` is not provided, the application automatically uses seeded in-memory demo data.
+Optional mailer foundation:
 
----
+```env
+SMTP_HOST=
+SMTP_PORT=
+SMTP_USER=
+SMTP_PASS=
+SMTP_SECURE=false
+SMTP_FROM=
+```
 
-## 📸 Screenshots
+## Admin Promotion
 
-> Screenshots will be added after deployment.
+Public registration cannot create admins. Promote an existing user:
 
----
+```bash
+npm run promote-admin -- user@example.com
+```
 
-## 🎨 UI Design
+## Future Scope
 
-The user interface was initially designed in Figma before implementation.
-
----
-
-## 🚀 Future Enhancements
-
-* Google Maps integration
-* Nearby restaurant discovery
-* AI-powered ingredient risk detection
-* OCR-based menu scanning
-* Government food safety data integration
-* Notification system
-* Restaurant owner dashboard
-
----
-
-## 👩‍💻 Developed By
-
-**Nithya Goud**
+- Official regulatory data integration, only with authorized sources
+- Proximity-based safety alerts
+- Receipt or QR-based visit verification
+- OCR menu scanning
+- AI-assisted risk detection

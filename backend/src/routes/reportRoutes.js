@@ -5,6 +5,6 @@ import { getReports, submitReport } from "../controllers/reportController.js";
 const router = Router();
 
 router.get("/", requireAuth, requireRole("admin"), getReports);
-router.post("/", requireAuth, submitReport);
+router.post("/", requireAuth, requireRole("user"), submitReport);
 
 export default router;

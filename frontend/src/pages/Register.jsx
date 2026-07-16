@@ -20,8 +20,8 @@ export default function Register() {
     event.preventDefault();
     setError("");
     try {
-      await register(form);
-      navigate("/dashboard");
+      const user = await register(form);
+      navigate(user.role === "restaurant_owner" ? "/owner" : "/dashboard");
     } catch (err) {
       setError(err.message);
     }
@@ -30,8 +30,10 @@ export default function Register() {
   return (
     <section className="page-shell max-w-2xl">
       <div className="card p-6">
-        <h1 className="text-2xl font-black text-ink">Create your safety profile</h1>
-        <p className="mt-2 text-sm text-gray-600">Allergies and preferences help Annapurna flag risky dishes.</p>
+        <h1 className="text-2xl font-black text-ink">Create your account</h1>
+        <p className="mt-2 text-sm text-gray-600">
+          Diner accounts can save allergies and preferences. Restaurant owner accounts require Annapurna moderation approval.
+        </p>
         <form className="mt-6 grid gap-4 sm:grid-cols-2" onSubmit={handleSubmit}>
           <label className="block space-y-2">
             <span className="label">Name</span>
@@ -52,14 +54,22 @@ export default function Register() {
               <option value="restaurant_owner">Restaurant Owner</option>
             </select>
           </label>
-          <label className="block space-y-2">
-            <span className="label">Dietary preferences</span>
-            <input className="field" placeholder="Vegetarian, Jain, Vegan" value={form.preferences} onChange={(e) => setForm({ ...form, preferences: e.target.value })} />
-          </label>
-          <label className="block space-y-2 sm:col-span-2">
-            <span className="label">Allergies</span>
-            <input className="field" placeholder="Dairy, Nuts, Gluten" value={form.allergies} onChange={(e) => setForm({ ...form, allergies: e.target.value })} />
-          </label>
+          {form.role === "user" ? (
+            <>
+              <label className="block space-y-2">
+                <span className="label">Dietary preferences</span>
+                <input className="field" placeholder="Vegetarian, Jain, Vegan" value={form.preferences} onChange={(e) => setForm({ ...form, preferences: e.target.value })} />
+              </label>
+              <label className="block space-y-2 sm:col-span-2">
+                <span className="label">Allergies</span>
+                <input className="field" placeholder="Dairy, Nuts, Gluten" value={form.allergies} onChange={(e) => setForm({ ...form, allergies: e.target.value })} />
+              </label>
+            </>
+          ) : (
+            <p className="rounded-md bg-green-50 px-3 py-2 text-sm font-semibold text-forest sm:col-span-2">
+              Restaurant owner accounts start pending. Annapurna moderation must approve the account and assign a restaurant before management tools are available.
+            </p>
+          )}
           {error && <p className="rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 sm:col-span-2">{error}</p>}
           <button className="btn-primary sm:col-span-2" type="submit">
             <UserPlus className="h-4 w-4" aria-hidden="true" />

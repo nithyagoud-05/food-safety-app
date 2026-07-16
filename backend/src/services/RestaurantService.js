@@ -3,7 +3,7 @@ import Restaurant from "../models/Restaurant.js";
 import Report from "../models/Report.js";
 import Review from "../models/Review.js";
 import { ApiError } from "../utils/errors.js";
-import { serializeDish, serializeReport, serializeRestaurant, serializeReview } from "./serializers.js";
+import { serializeDish, serializePublicReport, serializeRestaurant, serializeReview } from "./serializers.js";
 
 function ensureObjectId(id) {
   if (!mongoose.isValidObjectId(id)) {
@@ -20,7 +20,9 @@ function buildSearchFilter(search) {
 }
 
 export async function getRestaurants(query = {}) {
-  const restaurants = await Restaurant.find(buildSearchFilter(query.search)).sort({ safetyScore: -1, name: 1 }).lean();
+  const restaurants = await Restaurant.find({ ...buildSearchFilter(query.search), isActive: { $ne: false } })
+    .sort({ safetyDataStatus: 1, safetyScore: -1, name: 1 })
+    .lean();
   return restaurants.map(serializeRestaurant);
 }
 
@@ -28,7 +30,7 @@ export async function getRestaurantById(id) {
   ensureObjectId(id);
 
   const [restaurant, reviews, reports] = await Promise.all([
-    Restaurant.findById(id).lean(),
+    Restaurant.findOne({ _id: id, isActive: { $ne: false } }).lean(),
     Review.find({ restaurant: id }).populate("user", "name").sort({ createdAt: -1 }).lean(),
     Report.find({ restaurant: id }).sort({ createdAt: -1 }).lean()
   ]);
@@ -36,23 +38,13 @@ export async function getRestaurantById(id) {
   if (!restaurant) return null;
 
   const serializedRestaurant = serializeRestaurant(restaurant);
-  const menuItems = restaurant.menuItems?.length
-    ? restaurant.menuItems
-    : [
-        {
-          _id: restaurant._id,
-          dishName: restaurant.name,
-          description: restaurant.description,
-          ingredients: restaurant.ingredients || [],
-          allergens: restaurant.allergens || []
-        }
-      ];
+  const menuItems = restaurant.menuItems?.length ? restaurant.menuItems : [];
 
   return {
     ...serializedRestaurant,
     dishes: menuItems.map((dish) => serializeDish({ ...dish, restaurantId: restaurant._id })),
     reviews: reviews.map(serializeReview),
-    safetyHistory: reports.map((report) => serializeReport(report, { includeUser: false }))
+    safetyHistory: reports.map(serializePublicReport)
   };
 }
 

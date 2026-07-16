@@ -9,6 +9,7 @@ export default function SubmitReport() {
   const [params] = useSearchParams();
   const [restaurants, setRestaurants] = useState([]);
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const [form, setForm] = useState({
     restaurantId: params.get("restaurantId") || "",
     category: "Unhygienic Food",
@@ -23,9 +24,14 @@ export default function SubmitReport() {
   async function handleSubmit(event) {
     event.preventDefault();
     setMessage("");
-    await api.submitReport(form);
-    setForm({ ...form, category: "Unhygienic Food", description: "", image: "" });
-    setMessage("Report submitted with Pending status.");
+    setError("");
+    try {
+      await api.submitReport(form);
+      setForm({ ...form, category: "Unhygienic Food", description: "", image: "" });
+      setMessage("Report submitted with Pending status.");
+    } catch (err) {
+      setError(err.message);
+    }
   }
 
   return (
@@ -56,9 +62,10 @@ export default function SubmitReport() {
             <textarea className="field min-h-32" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required />
           </label>
           <label className="block space-y-2">
-            <span className="label">Optional image URL</span>
+            <span className="label">Optional evidence image URL</span>
             <input className="field" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} />
           </label>
+          {error && <p className="rounded-md bg-red-50 px-3 py-2 text-sm font-bold text-red-700">{error}</p>}
           {message && <p className="rounded-md bg-green-50 px-3 py-2 text-sm font-bold text-forest">{message}</p>}
           <button className="btn-primary" type="submit">
             <Send className="h-4 w-4" aria-hidden="true" />

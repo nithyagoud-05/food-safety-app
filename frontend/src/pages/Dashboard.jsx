@@ -18,7 +18,7 @@ export default function Dashboard() {
         <p className="text-sm font-bold uppercase tracking-wide text-safety">Consumer safety workspace</p>
         <h1 className="mt-2 text-3xl font-black text-ink">Welcome{user ? `, ${user.name}` : ""}</h1>
         <p className="mt-3 max-w-3xl text-gray-600">
-          Annapurna brings restaurant discovery, ingredient awareness, verified reviews, and reporting into one
+          Annapurna brings restaurant discovery, ingredient awareness, authenticated user reviews, and reporting into one
           practical flow.
         </p>
       </div>

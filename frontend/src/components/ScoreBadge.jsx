@@ -1,4 +1,12 @@
 export default function ScoreBadge({ score, badge }) {
+  if (score === null || score === undefined) {
+    return (
+      <span className="inline-flex items-center rounded-md border border-gray-200 bg-gray-50 px-2.5 py-1 text-sm font-bold text-gray-700">
+        Insufficient Data
+      </span>
+    );
+  }
+
   const tone =
     score >= 90
       ? "bg-green-100 text-green-800 border-green-200"

@@ -9,6 +9,8 @@ import restaurantRoutes from "./src/routes/restaurantRoutes.js";
 import reviewRoutes from "./src/routes/reviewRoutes.js";
 import reportRoutes from "./src/routes/reportRoutes.js";
 import profileRoutes from "./src/routes/profileRoutes.js";
+import adminRoutes from "./src/routes/adminRoutes.js";
+import ownerRoutes from "./src/routes/ownerRoutes.js";
 
 dotenv.config();
 
@@ -38,6 +40,8 @@ app.use("/api/restaurants", restaurantRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/owner", ownerRoutes);
 
 app.use((_req, res) => {
   res.status(404).json({ message: "Endpoint not found" });

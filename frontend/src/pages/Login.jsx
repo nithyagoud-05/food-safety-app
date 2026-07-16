@@ -14,8 +14,8 @@ export default function Login() {
     event.preventDefault();
     setError("");
     try {
-      await login(form);
-      navigate(location.state?.from || "/dashboard");
+      const user = await login(form);
+      navigate(location.state?.from || (user.role === "admin" ? "/admin" : user.role === "restaurant_owner" ? "/owner" : "/dashboard"));
     } catch (err) {
       setError(err.message);
     }

@@ -11,7 +11,12 @@ const reportSchema = new mongoose.Schema(
     },
     severity: { type: String, enum: ["Low", "Medium", "High", "Critical"], default: "Medium" },
     description: { type: String, required: true, trim: true },
-    status: { type: String, enum: ["Pending", "Reviewed", "Resolved"], default: "Pending" }
+    evidenceImageUrl: { type: String, default: "", trim: true },
+    status: { type: String, enum: ["Pending", "Reviewed", "Under Review", "Resolved", "Rejected"], default: "Pending", index: true },
+    sourceType: { type: String, enum: ["consumer_report", "annapurna_moderation", "official_regulatory_data"], default: "consumer_report" },
+    reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+    reviewedAt: { type: Date, default: null },
+    resolutionNote: { type: String, default: "", trim: true }
   },
   { timestamps: true }
 );

@@ -18,6 +18,16 @@ const userSchema = new mongoose.Schema(
       default: USER_STATUSES.ACTIVE,
       index: true
     },
+    ownerApprovalStatus: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: undefined,
+      index: true
+    },
+    ownerApprovedAt: { type: Date, default: null },
+    ownerApprovedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+    ownerRejectedAt: { type: Date, default: null },
+    ownerRejectedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
     allergies: [{ type: String, trim: true }],
     preferences: [{ type: String, trim: true }],
     savedRestaurants: [{ type: mongoose.Schema.Types.ObjectId, ref: "Restaurant" }]

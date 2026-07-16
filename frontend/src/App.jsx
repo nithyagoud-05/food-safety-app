@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Landing from "./pages/Landing.jsx";
 import Login from "./pages/Login.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import OwnerDashboard from "./pages/OwnerDashboard.jsx";
 import Profile from "./pages/Profile.jsx";
 import Register from "./pages/Register.jsx";
 import RestaurantDetail from "./pages/RestaurantDetail.jsx";
@@ -43,6 +44,14 @@ export default function App() {
           element={
             <ProtectedRoute roles={["admin"]}>
               <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/owner"
+          element={
+            <ProtectedRoute roles={["restaurant_owner"]}>
+              <OwnerDashboard />
             </ProtectedRoute>
           }
         />

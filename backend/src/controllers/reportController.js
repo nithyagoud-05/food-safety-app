@@ -5,14 +5,14 @@ const categories = ["Unhygienic Food", "Allergy Issue", "Food Poisoning", "Wrong
 
 export async function submitReport(req, res) {
   try {
-    const { restaurantId, category, description, image } = req.body;
+    const { restaurantId, category, description, image, evidenceImageUrl } = req.body;
     if (!restaurantId || !category || !description) {
       return res.status(400).json({ message: "Restaurant, category, and description are required" });
     }
     if (!categories.includes(category)) {
       return res.status(400).json({ message: "Invalid report category" });
     }
-    const report = await createReport(req.user, { restaurantId, category, description, image });
+    const report = await createReport(req.user, { restaurantId, category, description, image, evidenceImageUrl });
     res.status(201).json(report);
   } catch (error) {
     sendError(res, error);
