@@ -11,6 +11,19 @@ function ensureObjectId(id) {
   }
 }
 
+function normalizeEvidenceUrls(payload) {
+  const urls = [];
+  if (Array.isArray(payload.evidenceImageUrls)) urls.push(...payload.evidenceImageUrls);
+  if (payload.evidenceImageUrl) urls.push(payload.evidenceImageUrl);
+  if (payload.image) urls.push(payload.image);
+
+  const normalized = [...new Set(urls.map((url) => String(url || "").trim()).filter(Boolean))];
+  if (normalized.length > 3) {
+    throw new ApiError(400, "A report can include at most 3 evidence images");
+  }
+  return normalized;
+}
+
 export async function createReport(user, payload) {
   ensureObjectId(user.id);
   ensureObjectId(payload.restaurantId);
@@ -30,13 +43,16 @@ export async function createReport(user, payload) {
     throw new ApiError(400, "A similar active report was already submitted recently");
   }
 
+  const evidenceImageUrls = normalizeEvidenceUrls(payload);
+
   const report = await Report.create({
     restaurant: payload.restaurantId,
     user: user.id,
     type: payload.category || payload.type,
     severity: payload.severity || "Medium",
     description: payload.description,
-    evidenceImageUrl: payload.evidenceImageUrl || payload.image || "",
+    evidenceImageUrl: evidenceImageUrls[0] || "",
+    evidenceImageUrls,
     status: "Pending",
     sourceType: "consumer_report"
   });

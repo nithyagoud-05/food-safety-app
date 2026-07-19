@@ -5,10 +5,11 @@ function getToken() {
 }
 
 async function request(path, options = {}) {
+  const isFormData = options.body instanceof FormData;
   const headers = {
-    "Content-Type": "application/json",
     ...(options.headers || {})
   };
+  if (!isFormData) headers["Content-Type"] = "application/json";
   const token = getToken();
   if (token) headers.Authorization = `Bearer ${token}`;
 
@@ -36,6 +37,11 @@ export const api = {
   saveReview: (payload) => request("/reviews", { method: "POST", body: JSON.stringify(payload) }),
   deleteReview: (restaurantId) => request(`/reviews/${restaurantId}`, { method: "DELETE" }),
   submitReport: (payload) => request("/reports", { method: "POST", body: JSON.stringify(payload) }),
+  uploadReportEvidence: (files) => {
+    const formData = new FormData();
+    files.forEach((file) => formData.append("evidenceImages", file));
+    return request("/reports/evidence", { method: "POST", body: formData });
+  },
   reports: () => request("/reports"),
   adminOverview: () => request("/admin/overview"),
   adminUsers: () => request("/admin/users"),

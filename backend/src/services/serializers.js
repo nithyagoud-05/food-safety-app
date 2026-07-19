@@ -107,6 +107,7 @@ export function serializeReport(report, options = {}) {
     value.userName = user?.name;
     value.description = report.description;
     value.evidenceImageUrl = report.evidenceImageUrl;
+    value.evidenceImageUrls = report.evidenceImageUrls?.length ? report.evidenceImageUrls : report.evidenceImageUrl ? [report.evidenceImageUrl] : [];
   }
 
   if (options.includeDescription && !includeUser) {

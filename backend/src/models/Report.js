@@ -12,6 +12,14 @@ const reportSchema = new mongoose.Schema(
     severity: { type: String, enum: ["Low", "Medium", "High", "Critical"], default: "Medium" },
     description: { type: String, required: true, trim: true },
     evidenceImageUrl: { type: String, default: "", trim: true },
+    evidenceImageUrls: {
+      type: [String],
+      default: [],
+      validate: {
+        validator: (urls) => urls.length <= 3,
+        message: "A report can include at most 3 evidence images"
+      }
+    },
     status: { type: String, enum: ["Pending", "Reviewed", "Under Review", "Resolved", "Rejected"], default: "Pending", index: true },
     sourceType: { type: String, enum: ["consumer_report", "annapurna_moderation", "official_regulatory_data"], default: "consumer_report" },
     reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },

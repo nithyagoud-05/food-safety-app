@@ -246,7 +246,15 @@ export default function AdminDashboard() {
               <div key={report.id} className="rounded-lg border border-gray-200 p-4">
                 <p className="font-bold text-ink">{report.restaurantName || report.restaurantId} - {report.category} - {report.severity}</p>
                 <p className="mt-1 text-sm text-gray-600">{report.description}</p>
-                {report.evidenceImageUrl && <p className="mt-1 text-xs font-semibold text-gray-500">Evidence: {report.evidenceImageUrl}</p>}
+                {(report.evidenceImageUrls?.length || report.evidenceImageUrl) && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {(report.evidenceImageUrls?.length ? report.evidenceImageUrls : [report.evidenceImageUrl]).filter(Boolean).map((url) => (
+                      <a key={url} href={url} target="_blank" rel="noreferrer" className="block h-20 w-20 overflow-hidden rounded-md border border-gray-200 bg-gray-50">
+                        <img src={url} alt="Report evidence" className="h-full w-full object-cover" />
+                      </a>
+                    ))}
+                  </div>
+                )}
                 <div className="mt-3 grid gap-2 sm:grid-cols-[160px_160px_1fr_auto]">
                   <select className="field" value={reportEdits[report.id]?.status || report.status} onChange={(e) => setReportEdits({ ...reportEdits, [report.id]: { ...(reportEdits[report.id] || {}), status: e.target.value } })}>
                     {["Pending", "Under Review", "Resolved", "Rejected"].map((status) => <option key={status} value={status}>{status}</option>)}

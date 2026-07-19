@@ -29,6 +29,7 @@ Annapurna is not an official FSSAI system and does not claim government verifica
 - Backend: Node.js, Express.js
 - Database: MongoDB Atlas with Mongoose
 - Authentication: JWT
+- Image evidence storage: Cloudinary
 
 MongoDB is required. There is no in-memory production fallback.
 
@@ -52,7 +53,12 @@ PORT=5000
 MONGO_URI=mongodb+srv://...
 JWT_SECRET=replace-this-secret
 CLIENT_ORIGIN=http://localhost:5173
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
 ```
+
+Cloudinary is used for optional food-safety report evidence uploads. Create a Cloudinary account, copy the cloud name, API key, and API secret into `backend/.env`, then restart the backend. Uploaded evidence is streamed from the backend to Cloudinary; Annapurna stores only the returned secure Cloudinary URLs in MongoDB and never stores uploaded image files in the repository.
 
 Optional mailer foundation:
 
